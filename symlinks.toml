@@ -1,0 +1,9 @@
+[symlinks]
+# Format:
+# source = destination
+# 'source' = 'destination'
+vimrc = '~/.vimrc'
+'tmux.conf' = '~/.tmux.conf'
+
+[optional]
+local_source = "~/code/dotfiles"
