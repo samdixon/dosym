@@ -13,9 +13,11 @@ class DoSymlinks:
 
     def add_symlink(self, symlink_key, symlink_val):
         self.symlinks[symlink_key] = symlink_val
+        self._validate_symlinks();
 
-    def validate_symlinks(self):
+    def _validate_symlinks(self):
         pass
+            
 
     def create_symlinks(self):
         pass
