@@ -2,7 +2,7 @@
 # Format:
 # source = destination
 # 'source' = 'destination'
-vimrc = '~/.vimrc'
+'vimrc' = '~/.vimrc'
 'tmux.conf' = '~/.tmux.conf'
 
 [optional]
