@@ -4,7 +4,9 @@ from dosym import logging
 
 logger = logging.create_symlink_logger()
 
-class DoSymlinks:
+# Class that transforms form input data into usable data
+# For other classes such as Symlinks
+class Symlinks:
     def __init__(self):
         logger.debug("Instantiated symlink class")
         self.symlinks = {}
