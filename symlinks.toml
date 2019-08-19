@@ -6,4 +6,4 @@
 'tmux.conf' = '~/.tmux.conf'
 
 [optional]
-local_source = "~/code/dotfiles"
+local_path = "~/code/dotfiles"
