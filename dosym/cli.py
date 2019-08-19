@@ -62,44 +62,51 @@ def gather_inputs(args: argparse.Namespace) -> dict:
         # what if input from stdin is not proper toml
         # Throw error, exit, let user know why
         # Log and throw error
-        input_file_data = toml_stdin_parser()
-        logger.debug(input_file_data)
+        input_data = toml_stdin_parser()
+        logger.debug(input_data)
     
-    return input_file_data
+    return input_data
 
   # TODO put if elif else statement from cli in here
 
 #Main control flow function of CLI module"
 def cli():
+    # create argument parser && parse args
     args = create_parser()
 
-    logger.debug("Logging Args")
-    logger.debug(args)
+    logger.debug("Argparse Namespace: " + str(args))
 
-    input_file_data = process_inputs(args)
+    # gather input from stdin or file
+    input_data = gather_inputs(args)
 
-    ConfigInputs = ConfigFileInputs(
-            input_file_data['symlinks'], 
-            input_file_data['optional'])
+    # create instance of input data processor class which auto
+    # sanitizers (maybe rename this to input sanitizer (look it up)
+    # and gets it ready to dispatch to other classes for work to be done
+    processed_input_data = inputdata.InputDataTransformer(
+                                    input_data['symlinks'], 
+                                    input_data['optional'])
 
-    logger.debug(ConfigInputs)
+    logger.debug(processed_input_data)
 
-    symlink_object = symlink.DoSymlinks()
+    # Instantiate empty symlink data structure
+    # which holds information on symlinks to be added
+    # may rename this to something like 
+    # SymlinkFactory (look it up on terminology)
+    symlink_object = symlink.Symlinks()
 
     # TODO 
+    # Move this to input processing class
     # This needs to be an if statement:
     # If localpath = True: Merge localpath and key
     # Else key is just based off relative path
     # First option will be preferred. Second will require tons of error
     # handling and boilerplate code
-    for key,val in ConfigInputs.symlinks.items():
-        join_char = "/"
-        join_seq = (ConfigInputs.localpath['local_source'], key)
-        joined_key = join_char.join(join_seq)
-        symlink_object.add_symlink(joined_key, val)
-
+    for key,val in processed_input_data.localpath_symlinks.items():
+        symlink_object.add_symlink(key,val)
+        
     print(symlink_object.symlinks)
 
+    sys.exit(0)
 
 
     
