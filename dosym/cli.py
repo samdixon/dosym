@@ -4,6 +4,7 @@ import argparse
 import sys
 from dosym import logging
 from dosym import symlink
+from dosym import inputdata
 import toml
 
 logger = logging.create_cli_logger()
@@ -27,11 +28,6 @@ def create_parser() -> argparse.Namespace:
     args = parser.parse_args()
     return args
 
-class ConfigFileInputs:
-    def __init__(self, symlinks, localpath):
-        self.symlinks = symlinks
-        self.localpath = localpath
-
 def toml_file_parser(inputfiles: str) -> dict:
     return toml.load(inputfiles)
 
@@ -46,12 +42,12 @@ def toml_stdin_parser() -> dict:
 # Function to process inputs base on Input Type
 # If file input -> toml_file_parser
 # If stdin input -> toml_stdin_parser
-def process_inputs(args: argparse.Namespace) -> dict:
+def gather_inputs(args: argparse.Namespace) -> dict:
     if args.files:
        # TODO Error handling and logging for non TOML files
-       input_file_data = toml_file_parser(args.files[0])
+       input_data = toml_file_parser(args.files[0])
 
-       logger.debug(input_file_data)
+       logger.debug(input_data)
        logger.debug("args.files true")
     elif sys.stdin.isatty():
         # TODO 
