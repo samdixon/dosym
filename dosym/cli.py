@@ -2,12 +2,12 @@
 # code related to the CLI portion of this application
 import argparse
 import sys
-from dosym import logging
+import logging
 from dosym import symlink
 from dosym import inputdata
 import toml
 
-logger = logging.create_cli_logger()
+logger = logging.getLogger(__name__)
 logger.info("////////////////////////////////")
 logger.info("Start of new run")
 logger.info("////////////////////////////////")
@@ -25,6 +25,7 @@ def create_parser() -> argparse.Namespace:
             "--git", 
             type=str,
             help="Git destination address")
+    parser.add_argument("-d", "--debug", help="Enable Debug", action="store_true")
     args = parser.parse_args()
     return args
 
@@ -74,6 +75,11 @@ def cli():
     # create argument parser && parse args
     args = create_parser()
 
+    if args.debug:
+        logging.basicConfig(filename="debug.log", level=logging.DEBUG, format='%(asctime)h %(levelname)-8s %(name)s: %(message)s')
+    else:
+        logging.basicConfig(level=logging.INFO)
+
     logger.debug("Argparse Namespace: " + str(args))
 
     # gather input from stdin or file
@@ -104,8 +110,9 @@ def cli():
     for key,val in processed_input_data.localpath_symlinks.items():
         symlink_object.add_symlink(key,val)
         
-    print(symlink_object.symlinks)
+    print(symlink_object.validated_symlinks)
 
+    symlink_object.create_symlinks()
     sys.exit(0)
 
 
