@@ -1,8 +1,10 @@
 # Symlink Class File
 # Each symlink from input file creates an instance of the Symlink Class
-from dosym import logging
+import os
+import subprocess
+import logging
 
-logger = logging.create_symlink_logger()
+logger = logging.getLogger(__name__)
 
 # Class that transforms form input data into usable data
 # For other classes such as Symlinks
@@ -14,12 +16,15 @@ class Symlinks:
         self.invalidated_symlinks = {}
 
     def add_symlink(self, symlink_key, symlink_val):
-        self.symlinks[symlink_key] = symlink_val
-        self._validate_symlinks();
+        if self._validate_symlink(symlink_key):
+            self.validated_symlinks[symlink_key] = symlink_val
+        else:
+            self.invalidated_symlinks[symlink_key] = symlink_val
 
-    def _validate_symlinks(self):
-        pass
+    def _validate_symlink(self, symlink_key) -> bool:
+        return os.path.exists(os.path.expanduser(symlink_key))
             
 
     def create_symlinks(self):
-        pass
+        for key, val in self.validated_symlinks.items():
+            subprocess.call("ln -sfn {} {}".format(key,val), shell=True)
