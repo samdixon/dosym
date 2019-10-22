@@ -14,9 +14,9 @@ def create_parser() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
             description="Dosym. Easily create and remove symbolic links.")
     parser.add_argument(
-            "files", 
-            metavar="FILE", 
-            nargs="*", 
+            "files",
+            metavar="FILE",
+            nargs="*",
             help="One or more config files")
     parser.add_argument("-d", "--debug", help="Enable Debug", action="store_true")
     args = parser.parse_args()
@@ -24,6 +24,7 @@ def create_parser() -> argparse.Namespace:
 
 
 # Main control flow function of CLI module
+# Code starts and ends here.
 def cli() -> int:
     args = create_parser()
 
@@ -42,7 +43,7 @@ def cli() -> int:
     input_data into useable form for other classes
     """
     processed_input_data = inputs.InputDataTransformer(
-                                    input_data['symlinks'], 
+                                    input_data['symlinks'],
                                     input_data['optional'])
 
     # TODO
@@ -53,7 +54,7 @@ def cli() -> int:
     symlink_object = symlinks.Symlinks()
 
     symlinks.add_symlinks_helper(symlink_object, processed_input_data)
-        
+
     if (len(symlink_object.validated_symlinks.items()) > 0):
         symlink_object.create_symlinks()
     else:
@@ -70,5 +71,5 @@ def cli() -> int:
 
     return 0
 
-    
+
 
