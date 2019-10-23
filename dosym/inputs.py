@@ -7,37 +7,55 @@ logger = logging.getLogger(__name__)
 def toml_file_parser(inputfiles: str) -> dict:
     return toml.load(inputfiles)
 
-def toml_stdin_parser() -> dict:
-    temp = ""
-    for line in sys.stdin:
-        temp += line
+class BlankFileError(Exception):
+    # TODO Move to Exception File
+    """Raised when stdin input file doesn't exist or is blank"""
+    pass
 
-    return toml.loads(temp)
+def toml_stdin_parser() -> dict:
+    if len(sys.stdin.readlines()) == 0:
+        raise BlankFileError
+    buf = ""
+    for line in sys.stdin:
+        buf += line
+
+    return toml.loads(buf)
 
 # Function to gather inputs based on type
 # If file -> toml_file_parser
 # If stdin -> toml_stdin_parser()
 def gather_inputs(args) -> dict:
     if args.files:
-       # TODO Error handling and logging for non TOML files
-       input_data = toml_file_parser(args.files[0])
-
-       logger.debug("File Input Data: {}".format(input_data))
+       try:
+           input_data = toml_file_parser(args.files[0])
+           logger.debug("File Input Data: {}".format(input_data))
+       except toml.decoder.TomlDecodeError as e:
+           print("TomlDecodeError from input file")
+           print(f"Error: {e}")
+           print("Exiting...")
+           sys.exit()
+       except FileNotFoundError as e:
+            print("FileNotFound Error")
+            print(f"Error: {e}")
+            print("Exiting...")
+            sys.exit()
     elif sys.stdin.isatty():
-        # TODO 
-        # Error handling around no input given
-        # throw error, exit, let user know why
         print("No input file given and no input received")
         print("Exiting")
-        exit()
+        sys.exit()
     else:
-        # TODO
-        # error handling around this?
-        # what if input from stdin is not proper toml
-        # Throw error, exit, let user know why
-        # Log and throw error
-        input_data = toml_stdin_parser()
-        logger.debug("Stdin Input Data: {}".format(input_data))
+        try:
+           input_data = toml_stdin_parser()
+           logger.debug("Stdin Input Data: {}".format(input_data))
+        except toml.decoder.TomlDecodeError as e:
+           print("TomlDecodeError from input file")
+           print(f"Error: {e}")
+           print("Exiting...")
+           sys.exit()
+        except BlankFileError as e:
+            print("Blank File")
+            exit()
+            
     
     return input_data
 
