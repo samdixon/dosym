@@ -59,7 +59,7 @@ class Symlink():
         self.valid_dest_path = self._validate_dest_path()
 
     def __repr__(self):
-        return f"Symlink({self.src}, {self.dest}")
+        return f"Symlink({self.src}, {self.dest}"
 
     def __str__(self):
         return f"""
