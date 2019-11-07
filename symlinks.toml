@@ -1,15 +1,7 @@
 [symlinks]
 # Format:
 # 'source' = 'destination'
+"npmrc" = "~/.npmrc"
 'vimrc' = '~/.vimrc'
-'tmux.conf' = '~/.tmux.conf'
-'bashrc' = '~/.bashrc'
-'inputrc' = '~/.inputrc'
-'settings.json' = '/Users/sdixon/Library/Application\ Support/Code/User/settings.json'
-'keybindings.json' = '/Users/sdixon/Library/Application\ Support/Code/User/keybindings.json'
-'npmrc' = '~/.npmrc'
-#'~/Library/Mobile\ Documents/com~apple~CloudDocs/' = '~/iCloud'
+"!~/Library/Mobile\ Documents/com~apple~CloudDocs/" = '~/iCloud'
 
-[optional]
-local_path = "~/code/dotfiles"
-git_remote = 'https://github.com/samdixon/dotfiles'

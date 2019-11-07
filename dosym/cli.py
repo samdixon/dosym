@@ -1,5 +1,3 @@
-# cli
-# code related to the CLI portion of this application
 import argparse
 import sys
 import logging
@@ -7,18 +5,21 @@ import dosym.symlinks as symlinks
 import dosym.inputs as inputs
 
 logger = logging.getLogger(__name__)
-logger.info("---------------------------------")
-
 
 def create_parser() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-            description="Dosym. Easily create and remove symbolic links.")
+            description=
+            "Dosym. Easily create and remove symbolic links.")
     parser.add_argument(
             "files",
             metavar="FILE",
             nargs="*",
             help="One or more config files")
-    parser.add_argument("-d", "--debug", help="Enable Debug", action="store_true")
+    parser.add_argument(
+            "-d", 
+            "--debug", 
+            help="Enable Debug", 
+            action="store_true")
     args = parser.parse_args()
     return args
 
@@ -27,21 +28,22 @@ def create_parser() -> argparse.Namespace:
 # Code starts and ends here.
 def cli() -> int:
     args = create_parser()
-
     if args.debug:
         logging.basicConfig(filename="debug.log", level=logging.DEBUG)
+        logger.debug("\nDebug Logging Begin\n")
     else:
         logging.basicConfig(level=logging.INFO)
 
+    # Fix this messing concat
     logger.debug("Argparse Namespace: " + str(args))
 
-    # gather input from stdin or file
     input_data = inputs.gather_inputs(args)
-
-    """
-    Create instance of InputDataTransformer class which transforms
-    input_data into useable form for other classes
-    """
+    # TODO Just pass input data
+    # This way if there is no key it does not matter.
+    # This also allows you to add as many keys as you want to the
+    # file
+    # This will be good for later **args support for hostname
+    # Or os based filtering 
     processed_input_data = inputs.InputDataTransformer(
                                     input_data['symlinks'],
                                     input_data['optional'])
@@ -50,10 +52,11 @@ def cli() -> int:
     # Update repr for this logger so it looks nice
     logger.debug('Proccessed input data: {}'.format(processed_input_data))
 
-    # Instantiate empty Symlinks class
-    symlink_object = symlinks.Symlinks()
-
-    symlinks.add_symlinks_helper(symlink_object, processed_input_data)
+    symlink_list = symlinks.add_symlinks_helper2(processed_input_data)
+    logger.debug(f"Symlink_List: {symlink_list}")
+    for i in symlink_list:
+        logger.debug(f"{i}")
+    exit()
 
     if (len(symlink_object.validated_symlinks.items()) > 0):
         symlink_object.create_symlinks()

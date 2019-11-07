@@ -1,16 +1,12 @@
 import sys
 import logging
 import toml
+import dosym.exceptions as exceptions
 
 logger = logging.getLogger(__name__)
 
 def toml_file_parser(inputfiles: str) -> dict:
     return toml.load(inputfiles)
-
-class BlankFileError(Exception):
-    # TODO Move to Exception File
-    """Raised when stdin input file doesn't exist or is blank"""
-    pass
 
 def toml_stdin_parser() -> dict:
     if len(sys.stdin.readlines()) == 0:
@@ -52,7 +48,7 @@ def gather_inputs(args) -> dict:
            print(f"Error: {e}")
            print("Exiting...")
            sys.exit()
-        except BlankFileError as e:
+        except exceptions.BlankFileError as e:
             print("Blank File")
             exit()
             
@@ -60,6 +56,7 @@ def gather_inputs(args) -> dict:
     return input_data
 
 class InputDataTransformer:
+    """Transforms input data. Joins paths and creates data structures"""
     def __init__(self, symlinks, optional):
         self.symlinks = symlinks
         self.optional = optional
@@ -72,6 +69,14 @@ class InputDataTransformer:
         if self.local_path != None:
             self._join_local_path_and_key()
     
+    def __str__(self):
+        return f"""
+        symlinks: {self.symlinks}
+        optional: {self.optional}
+        git_remote: {self.git_remote}
+        local_path: {self.local_path}
+        localpath_symlinks: {self.localpath_symlinks}"""
+
     def _parse_optional_inputs(self):
         if 'git_remote' in self.optional:
             self.git_remote = self.optional['git_remote']
@@ -84,9 +89,13 @@ class InputDataTransformer:
     def _join_local_path_and_key(self):
         self.localpath_symlinks = {}
         for key,val in self.symlinks.items():
-            join_char = "/"
-            join_seq = (self.optional['local_path'], key)
-            joined_key = join_char.join(join_seq)
-            self.localpath_symlinks[joined_key] = val
+            if key.startswith("!"):
+                new_key = key.lstrip("!")
+                self.localpath_symlinks[new_key] = val
+            else:
+                join_char = "/"
+                join_seq = (self.optional['local_path'], key)
+                joined_key = join_char.join(join_seq)
+                self.localpath_symlinks[joined_key] = val
 
 

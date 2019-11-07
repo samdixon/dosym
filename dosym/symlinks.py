@@ -12,14 +12,15 @@ def add_symlinks_helper(symlink_object, processed_input_data) -> None:
     for key, val in processed_input_data.localpath_symlinks.items():
         symlink_object.add_symlink(key, val)
 
-"""
-Class that validates and creates Symlinks
-This class may have slightly too much responsibility
-It may make more sense to split it up into a SymlinkValidation &
-SymlinkMaker class. 
-In very early stages. Currently only shelling out to a singular
-command with no optional flags
-"""
+def add_symlinks_helper2(processed_input_data) -> list: 
+    l = list()
+    for key, val in processed_input_data.localpath_symlinks.items():
+        l.append(Symlink(key,val))
+        logger.debug(f"Adds {key}: {val} to Symlinks List")
+
+    return l
+
+
 class Symlinks:
     def __init__(self):
         self.symlinks = {}
@@ -40,4 +41,57 @@ class Symlinks:
 
     def create_symlinks(self):
         for key, val in self.validated_symlinks.items():
-            subprocess.call("ln -sfn {} {}".format(key,val), shell=True)
+            try:
+                os.symlink(os.path.expanduser(key), os.path.expanduser(val))
+            except FileNotFoundError as e:
+                pass
+            except FileExistsError as e:
+                pass
+            
+class Symlink():
+    """Class to create a single instance of a Symlink"""
+    def __init__(self, src, dest):
+        self.src = src
+        self.dest = dest
+        self.absolute_src = self._get_absolute_path(self.src)
+        self.absolute_dest = self._get_absolute_path(self.dest)
+        self.valid_src = self._validate_src()
+        self.valid_dest_path = self._validate_dest_path()
+
+    def __str__(self):
+        return f"""
+        Src: {self.src}
+        Dest: {self.dest}
+        Absolute Src: {self.absolute_src}
+        Absolute Dest: {self.absolute_dest}
+        Valid Src: {self.valid_src}
+        Valid Dest Path: {self.valid_dest_path}"""
+
+    def _get_absolute_path(self, item) -> bool:
+        return os.path.expanduser(item)
+
+    def _validate_src(self) -> bool:
+        return os.path.exists(self.absolute_src)
+
+    def _validate_dest_path(self) -> bool:
+        s = self.absolute_dest.split("/")
+        s.pop()
+        r = "/".join(s) 
+        print(os.path.exists(r))
+        print(r)
+        return True
+
+    def make_paths(self):
+        pass
+
+    def simple_create(self):
+        os.symlink(self.absolute_src, self.absolute_dest)
+
+    def force_create(self):
+        subprocess.call(
+                ["ln", "-sfn", f"{self.absolute_src}", 
+                    f"{self.absolute_dest}"], 
+                shell=True)
+
+
+
