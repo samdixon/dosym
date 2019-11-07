@@ -42,7 +42,7 @@ def cli() -> int:
     processed_input_data = inputs.InputDataTransformer(input_data)
     logger.debug('Proccessed input data: {}'.format(processed_input_data))
 
-    symlink_list = symlinks.add_symlinks_helper2(processed_input_data)
+    symlink_list = symlinks.add_symlinks_helper(processed_input_data)
     logger.debug(f"Symlink_List: {symlink_list}")
     for i in symlink_list:
         logger.debug(f"{i}")
