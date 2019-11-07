@@ -10,7 +10,7 @@ def toml_file_parser(inputfiles: str) -> dict:
 
 def toml_stdin_parser() -> dict:
     if len(sys.stdin.readlines()) == 0:
-        raise BlankFileError
+        raise exceptions.BlankFileError
     buf = ""
     for line in sys.stdin:
         buf += line
@@ -69,6 +69,8 @@ class InputDataTransformer:
         if self.local_path != None:
             self._join_local_path_and_key()
     
+    def __repr__(self):
+        return f"InputDataTransformer({self.symlinks}, {self.optional}")
     def __str__(self):
         return f"""
         symlinks: {self.symlinks}
