@@ -38,18 +38,8 @@ def cli() -> int:
     logger.debug("Argparse Namespace: " + str(args))
 
     input_data = inputs.gather_inputs(args)
-    # TODO Just pass input data
-    # This way if there is no key it does not matter.
-    # This also allows you to add as many keys as you want to the
-    # file
-    # This will be good for later **args support for hostname
-    # Or os based filtering 
-    processed_input_data = inputs.InputDataTransformer(
-                                    input_data['symlinks'],
-                                    input_data['optional'])
 
-    # TODO
-    # Update repr for this logger so it looks nice
+    processed_input_data = inputs.InputDataTransformer(input_data)
     logger.debug('Proccessed input data: {}'.format(processed_input_data))
 
     symlink_list = symlinks.add_symlinks_helper2(processed_input_data)
