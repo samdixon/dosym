@@ -17,7 +17,7 @@ DESCRIPTION = "Simple utility to manage symlinks"
 URL = "https://github.com/samjdixon/dosym"
 EMAIL = "me@sjd.sh"
 AUTHOR = "Samuel Dixon"
-REQUIRES_PYTHON = ">=3.5.0"
+REQUIRES_PYTHON = ">=3.6.0"
 VERSION = "0.0.1"
 
 # What packages are required for this module to be executed?
