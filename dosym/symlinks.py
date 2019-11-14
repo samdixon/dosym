@@ -8,13 +8,13 @@ logger = logging.getLogger(__name__)
 """
 Simple helper function that adds symlinks to Symlinks class
 """
-def add_symlinks_helper2(processed_input_data) -> list: 
-    l = list()
+def add_symlinks_helper(processed_input_data) -> list: 
+    buf = list()
     for key, val in processed_input_data.localpath_symlinks.items():
-        l.append(Symlink(key,val))
+        buf.append(Symlink(key,val))
         logger.debug(f"Adds {key}: {val} to Symlinks List")
 
-    return l
+    return buf
 
 
 class Symlink():
