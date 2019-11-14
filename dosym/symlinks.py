@@ -54,9 +54,15 @@ class Symlink():
         s = self.absolute_dest.split("/")
         s.pop()
         r = "/".join(s) 
-        print(os.path.exists(r))
-        print(r)
         return True
+
+    def _check_file_type(self):
+        if os.path.isdir(self.absolute_src):
+            return 'directory'
+        elif os.path.isfile(self.absolute_src):
+            return 'file'
+        else:
+            logger.error("Error in _check_file_type function")
 
     def make_paths(self):
         pass
