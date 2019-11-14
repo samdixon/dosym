@@ -23,23 +23,24 @@ def create_parser() -> argparse.Namespace:
     args = parser.parse_args()
     return args
 
+def check_debug_mode(args):
+    if args.debug:
+        logger.debug("\nDebug Logging Begin\n")
+        logger.debug("Argparse Namespace: " + str(args))
+        debug_file = "debug.log"
+        print(f"Writing debug log to ./{debug_file}")
+        return logging.basicConfig(filename=debug_file, level=logging.DEBUG)
+    else:
+        return logging.basicConfig(level=logging.INFO)
 
 # Main control flow function of CLI module
 # Code starts and ends here.
 def cli() -> int:
     args = create_parser()
-    if args.debug:
-        logging.basicConfig(filename="debug.log", level=logging.DEBUG)
-        logger.debug("\nDebug Logging Begin\n")
-    else:
-        logging.basicConfig(level=logging.INFO)
+    check_debug_mode(args)
 
-    # Fix this messing concat
-    logger.debug("Argparse Namespace: " + str(args))
-
-    input_data = inputs.gather_inputs(args)
-
-    processed_input_data = inputs.InputDataTransformer(input_data)
+    raw_input_data = inputs.gather_inputs(args)
+    processed_input_data = inputs.InputDataTransformer(raw_input_data)
     logger.debug('Proccessed input data: {}'.format(processed_input_data))
 
     symlink_list = symlinks.add_symlinks_helper(processed_input_data)

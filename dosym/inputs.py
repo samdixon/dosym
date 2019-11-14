@@ -59,19 +59,18 @@ class InputDataTransformer:
     """Transforms input data. Joins paths and creates data structures"""
     def __init__(self, input_data):
         self.input_data = input_data
+        self.symlinks = None
+        self.optional = None
+        self.git_remote = None 
+        self.local_path = None
+        self.localpath_symlinks = None
 
         if 'symlinks' in self.input_data:
             self.symlinks = self.input_data['symlinks']
         if 'optional' in self.input_data:
             self.optional = self.input_data['optional']
-
-        self.git_remote = None 
-        self.local_path = None
-        self.localpath_symlinks = None
-
-        self._parse_optional_inputs()
+            self._parse_optional_inputs()
         
-        # Hacky. Needs more elegant solution
         if self.local_path != None:
             self._join_local_path_and_key()
         else:
@@ -79,6 +78,7 @@ class InputDataTransformer:
     
     def __repr__(self):
         return f"InputDataTransformer({self.symlinks}, {self.optional}"
+
     def __str__(self):
         return f"""
         symlinks: {self.symlinks}
