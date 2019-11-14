@@ -39,7 +39,10 @@ class Symlink():
         Absolute Src: {self.absolute_src}
         Absolute Dest: {self.absolute_dest}
         Valid Src: {self.valid_src}
-        Valid Dest Path: {self.valid_dest_path}"""
+        Valid Dest Path: {self.valid_dest_path}
+        File Type: {self.file_type}
+        Destination Already Symlink?: {self.dest_already_symlink}"""
+
 
     def _get_absolute_path(self, item) -> bool:
         return os.path.expanduser(item)
