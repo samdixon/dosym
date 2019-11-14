@@ -26,6 +26,8 @@ class Symlink():
         self.absolute_dest = self._get_absolute_path(self.dest)
         self.valid_src = self._validate_src()
         self.valid_dest_path = self._validate_dest_path()
+        self.file_type = self._check_file_type() 
+        self.dest_already_symlink = False
 
     def __repr__(self):
         return f"Symlink({self.src}, {self.dest}"
