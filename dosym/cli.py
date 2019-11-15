@@ -6,7 +6,7 @@ import dosym.inputs as inputs
 
 logger = logging.getLogger(__name__)
 
-def create_parser() -> argparse.Namespace:
+def create_parser():
     parser = argparse.ArgumentParser(
             description=
             "Dosym. Easily create and remove symbolic links.")
@@ -35,7 +35,7 @@ def check_debug_mode(args):
 
 # Main control flow function of CLI module
 # Code starts and ends here.
-def cli() -> int:
+def cli():
     args = create_parser()
     check_debug_mode(args)
 

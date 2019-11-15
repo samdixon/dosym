@@ -5,10 +5,10 @@ import dosym.exceptions as exceptions
 
 logger = logging.getLogger(__name__)
 
-def toml_file_parser(inputfiles: str) -> dict:
+def toml_file_parser(inputfiles):
     return toml.load(inputfiles)
 
-def toml_stdin_parser() -> dict:
+def toml_stdin_parser():
     if len(sys.stdin.readlines()) == 0:
         raise exceptions.BlankFileError
     buf = ""

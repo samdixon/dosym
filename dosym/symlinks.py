@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 """
 Simple helper function that adds symlinks to Symlinks class
 """
-def add_symlinks_helper(processed_input_data) -> list: 
+def add_symlinks_helper(processed_input_data): 
     buf = list()
     for key, val in processed_input_data.localpath_symlinks.items():
         buf.append(Symlink(key,val))
@@ -44,13 +44,13 @@ class Symlink():
         Destination Already Symlink?: {self.dest_already_symlink}"""
 
 
-    def _get_absolute_path(self, item) -> bool:
+    def _get_absolute_path(self, item):
         return os.path.expanduser(item)
 
-    def _validate_src(self) -> bool:
+    def _validate_src(self):
         return os.path.exists(self.absolute_src)
 
-    def _validate_dest_path(self) -> bool:
+    def _validate_dest_path(self):
         s = self.absolute_dest.split("/")
         s.pop()
         r = "/".join(s) 
