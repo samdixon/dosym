@@ -62,7 +62,7 @@ class InputDataTransformer:
         self.symlinks = None
         self.optional = None
         self.git_remote = None 
-        self.local_path = None
+        self.source_prefix = None
         self.localpath_symlinks = None
 
         if 'symlinks' in self.input_data:
@@ -71,8 +71,8 @@ class InputDataTransformer:
             self.optional = self.input_data['optional']
             self._parse_optional_inputs()
         
-        if self.local_path != None:
-            self._join_local_path_and_key()
+        if self.source_prefix != None:
+            self._join_source_prefix_and_key()
         else:
             self.localpath_symlinks = self.symlinks
     
@@ -84,19 +84,19 @@ class InputDataTransformer:
         symlinks: {self.symlinks}
         optional: {self.optional}
         git_remote: {self.git_remote}
-        local_path: {self.local_path}
+        source_prefix: {self.source_prefix}
         localpath_symlinks: {self.localpath_symlinks}"""
 
     def _parse_optional_inputs(self):
         if 'git_remote' in self.optional:
             self.git_remote = self.optional['git_remote']
-        if 'local_path' in self.optional:
-            self.local_path = self.optional['local_path']
+        if 'source_prefix' in self.optional:
+            self.source_prefix = self.optional['source_prefix']
 
     def determine_path_type(self):
         pass
 
-    def _join_local_path_and_key(self):
+    def _join_source_prefix_and_key(self):
         self.localpath_symlinks = {}
         for key,val in self.symlinks.items():
             if key.startswith("!"):
@@ -104,7 +104,7 @@ class InputDataTransformer:
                 self.localpath_symlinks[new_key] = val
             else:
                 join_char = "/"
-                join_seq = (self.optional['local_path'], key)
+                join_seq = (self.optional['source_prefix'], key)
                 joined_key = join_char.join(join_seq)
                 self.localpath_symlinks[joined_key] = val
 
