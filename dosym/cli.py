@@ -52,7 +52,10 @@ def cli():
 
     print("Created the following symlinks:")
     for link in symlink_list:
-        link.create(args.force)
+        if link.is_valid_src():
+            link.create(args.force)
+        else:
+            print("Link src not valid")
     return 0
 
 
