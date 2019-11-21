@@ -24,25 +24,12 @@ class Symlink():
         self.dest = dest
         self.absolute_src = self._get_absolute_path(self.src)
         self.absolute_dest = self._get_absolute_path(self.dest)
-        self.valid_src = self._validate_src()
-        self.valid_dest_path = self._validate_dest_path()
-        self.file_type = self._check_file_type() 
+        self.is_valid_src = self._validate_src()
+        self.is_valid_dest_path = self._validate_dest_path()
+        self.file_type = None
+        if self.is_valid_src:
+            self.file_type = self._check_file_type() 
         self.dest_already_symlink = False
-
-    def __repr__(self):
-        return f"Symlink({self.src}, {self.dest}"
-
-    def __str__(self):
-        return f"""
-        Src: {self.src}
-        Dest: {self.dest}
-        Absolute Src: {self.absolute_src}
-        Absolute Dest: {self.absolute_dest}
-        Valid Src: {self.valid_src}
-        Valid Dest Path: {self.valid_dest_path}
-        File Type: {self.file_type}
-        Destination Already Symlink?: {self.dest_already_symlink}"""
-
 
     def _get_absolute_path(self, item):
         return os.path.expanduser(item)
@@ -50,11 +37,22 @@ class Symlink():
     def _validate_src(self):
         return os.path.exists(self.absolute_src)
 
-    def _validate_dest_path(self):
+    def _pop_dest_file(self):
         s = self.absolute_dest.split("/")
         s.pop()
-        r = "/".join(s) 
-        return True
+        return "/".join(s) 
+
+    def _validate_dest_path(self):
+        if os.path.exists(self._pop_dest_file()): 
+            return True
+        else:
+            try:
+                os.makedirs(self._pop_dest_file())
+                self._validate_dest_path()
+                return True
+            except:
+                logger.error(f"Attempted to create {self._pop_dest_file()} and failed.")
+                return False
 
     def _check_file_type(self):
         if os.path.isdir(self.absolute_src):
@@ -64,17 +62,31 @@ class Symlink():
         else:
             logger.error("Error in _check_file_type function")
 
-    def make_paths(self):
+    def _make_paths(self):
         pass
 
-    def simple_create(self):
-        os.symlink(self.absolute_src, self.absolute_dest)
+    def _simple_create(self):
+        try:
+            os.symlink(self.absolute_src, self.absolute_dest)
+            print(f"{self.src} --> {self.dest}")
+        except FileExistsError as e:
+            logger.debug(f"{e}")
 
-    def force_create(self):
-        subprocess.call(
-                ["ln", "-sfn", f"{self.absolute_src}", 
-                    f"{self.absolute_dest}"], 
-                shell=True)
+    def _force_create(self):
+        try:
+            subprocess.call(
+                    f"ln -sfn {self.absolute_src} {self.absolute_dest}", 
+                    shell=True)
+            print(f"{self.src} --> {self.dest}")
+        except:
+            pass
 
+    def create(self, force):
+        if force:
+            self._force_create()
+            logger.debug(f"Created link {self.src} {self.dest}")
+        else:
+            self._simple_create()
+            logger.debug(f"Created link {self.src} {self.dest}")
 
 

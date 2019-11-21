@@ -9,12 +9,18 @@ logger = logging.getLogger(__name__)
 def create_parser():
     parser = argparse.ArgumentParser(
             description=
-            "Dosym. Easily create and remove symbolic links.")
+            "Dosym. Easily create and remove symbolic links with a toml file.")
     parser.add_argument(
             "files",
             metavar="FILE",
             nargs="*",
             help="One or more config files")
+    parser.add_argument(
+            "-f",
+            "--force",
+            help="Force create symlink and overlink current files",
+            action="store_true"
+            )
     parser.add_argument(
             "-d", 
             "--debug", 
@@ -25,44 +31,28 @@ def create_parser():
 
 def check_debug_mode(args):
     if args.debug:
-        logger.debug("\nDebug Logging Begin\n")
-        logger.debug("Argparse Namespace: " + str(args))
         debug_file = "debug.log"
         print(f"Writing debug log to ./{debug_file}")
-        return logging.basicConfig(filename=debug_file, level=logging.DEBUG)
+        logging.basicConfig(filename=debug_file, level=logging.DEBUG)
+        logger.debug("\nDebug Logging Begin\n")
+        logger.debug("Argparse Namespace: " + str(args))
     else:
-        return logging.basicConfig(level=logging.INFO)
+        logging.basicConfig(level=logging.INFO)
 
-# Main control flow function of CLI module
-# Code starts and ends here.
 def cli():
     args = create_parser()
     check_debug_mode(args)
 
     raw_input_data = inputs.gather_inputs(args)
     processed_input_data = inputs.InputDataTransformer(raw_input_data)
-    logger.debug('Proccessed input data: {}'.format(processed_input_data))
+    logger.debug(f'Proccessed input data: {processed_input_data}')
 
     symlink_list = symlinks.add_symlinks_helper(processed_input_data)
     logger.debug(f"Symlink_List: {symlink_list}")
-    for i in symlink_list:
-        logger.debug(f"{i}")
-    exit()
 
-    if (len(symlink_object.validated_symlinks.items()) > 0):
-        symlink_object.create_symlinks()
-    else:
-        # TODO
-        # Exception
-        print("No symlinks given")
-
-    ## This needs to be either in the symlinks class or in some
-    ## other func
-    print("Successfully created the following symlinks:")
-    for key,val in symlink_object.validated_symlinks.items():
-        print(key, "-->\t", val)
-
-
+    print("Created the following symlinks:")
+    for link in symlink_list:
+        link.create(args.force)
     return 0
 
 
