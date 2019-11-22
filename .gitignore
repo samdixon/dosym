@@ -1,2 +1,6 @@
 *.egg-info
 main.log
+build
+dist
+__pycache__
+debug.log
