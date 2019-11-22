@@ -1,14 +1,17 @@
 # Dosym
 
-Dosym is a program that creates symlinks based off the input of a toml configuration file. It can also accept a toml file via stdin. This can be useful as you may specify a `git_remote` url that will pull the files down.
+Dosym is a program that creates symlinks based off the input of a toml configuration file. It can also accept a toml file via stdin. 
 
 ### Example Usage
 
 Run with a file specified
-`dosym symlinks.toml`
+
+```dosym symlinks.toml```
 
 Run via stdin pipe
-`curl https://raw.githubusercontent.com/samdixon/dotfiles/master/symlinks.toml | dosym`
+* this can be useful with the 'git_remote' option set as dosym will automatically pull in your files if needed.
+
+```curl https://raw.githubusercontent.com/samdixon/dotfiles/master/symlinks.toml | dosym```
 
 ### Toml File Layout
 The file uses standard toml formatting. Below is a good reference for what the file should look like:
