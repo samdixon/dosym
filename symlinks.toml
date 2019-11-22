@@ -1,7 +1,0 @@
-[symlinks]
-# Format:
-# 'source' = 'destination'
-"npmrc" = "~/.npmrc"
-'vimrc' = '~/.vimrc'
-"!~/Library/Mobile\ Documents/com~apple~CloudDocs/" = '~/iCloud'
-
