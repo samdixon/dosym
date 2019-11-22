@@ -14,8 +14,8 @@ from setuptools import find_packages, setup, Command
 # Package meta-data.
 NAME = "dosym"
 DESCRIPTION = "Simple utility to manage symlinks"
-URL = "https://github.com/samjdixon/dosym"
-EMAIL = "me@sjd.sh"
+URL = "https://github.com/samdixon/dosym"
+EMAIL = "sdixon@posteo.net"
 AUTHOR = "Samuel Dixon"
 REQUIRES_PYTHON = ">=3.6.0"
 VERSION = "0.0.1"
@@ -99,7 +99,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=find_packages(exclude=("tests",)),
+    packages=find_packages(),
     # If your package is a single module, use this instead of 'packages':
     # py_modules=['mypackage'],
     entry_points="""
