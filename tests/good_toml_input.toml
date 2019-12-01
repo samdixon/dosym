@@ -1,0 +1,7 @@
+[symlinks]
+'src' = 'dest'
+'dest' = 'src'
+
+[optional]
+git_remote = 'https://string...'
+source_prefix = 'pref'
