@@ -44,12 +44,9 @@ def cli():
     args = create_parser()
     check_debug_mode(args)
 
-    raw_input_data = inputs.gather_inputs(args)
-    processed_input_data = inputs.InputDataTransformer(raw_input_data)
-    logger.debug(f'Proccessed input data: {processed_input_data}')
+    processed_input_data = inputs.process(args)
 
-    symlink_list = symlinks.add_symlinks_helper(processed_input_data)
-    logger.debug(f"Symlink_List: {symlink_list}")
+    symlinks = symlinks.add_symlinks_helper(processed_input_data)
 
     print("Created the following symlinks:")
     for link in symlink_list:

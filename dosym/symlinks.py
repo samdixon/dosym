@@ -5,15 +5,16 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-"""
-Simple helper function that adds symlinks to Symlinks class
-"""
 def add_symlinks_helper(processed_input_data): 
+    """
+    Simple helper function that adds symlinks to Symlinks class
+    """
     buf = list()
     for key, val in processed_input_data.localpath_symlinks.items():
         buf.append(Symlink(key,val))
         logger.debug(f"Adds {key}: {val} to Symlinks List")
 
+    logger.debug(f"Symlinks: {buf}")
     return buf
 
 
