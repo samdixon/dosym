@@ -5,7 +5,7 @@ import dosym.exceptions as exceptions
 
 logger = logging.getLogger(__name__)
 
-class InputDataTransformer:
+class InputData(object):
     """Transforms input data. Joins paths and creates data structures"""
     def __init__(self, input_data):
         self.input_data = input_data
@@ -27,7 +27,7 @@ class InputDataTransformer:
             self.localpath_symlinks = self.symlinks
     
     def __repr__(self):
-        return f"InputDataTransformer({self.symlinks}, {self.optional}"
+        return f"InputData({self.input_data})"
 
     def __str__(self):
         return f"""
@@ -109,9 +109,9 @@ def gather_inputs(args) -> dict:
     return input_data
 
 
-def process(args) -> InputDataTransformer:
+def process(args) -> InputData:
     raw = gather_inputs(args)
-    parsed = InputDataTransformer(raw)
+    parsed = InputData(raw)
     logger.debug(f'Proccessed input data: {parsed}')
 
     return parsed
