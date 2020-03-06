@@ -3,6 +3,7 @@ import sys
 import logging
 import dosym.symlinks as symlinks
 import dosym.inputs as inputs
+import dosym.output as output
 
 logger = logging.getLogger(__name__)
 
@@ -44,16 +45,15 @@ def cli():
     args = create_parser()
     check_debug_mode(args)
 
-    processed_input_data = inputs.process(args)
+    input_data = inputs.process(args)
 
-    symlinks = symlinks.add_symlinks_helper(processed_input_data)
+    symlink_list = symlinks.add_symlinks_helper(input_data)
 
-    print("Created the following symlinks:")
     for link in symlink_list:
-        if link.is_valid_src:
-            link.create(args.force)
-        else:
-            print("Link src not valid")
+        link.create(args.force)
+
+    outputs = output.Outputs(symlink_list) 
+    outputs.symlink_output()
     return 0
 
 
