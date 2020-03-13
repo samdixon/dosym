@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def create_parser(optional=None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
             description=
-            "dosym - easily & quickly create symlinks with a toml file.")
+            "dosym - quickly & easily create symlinks with a toml file.")
     parser.add_argument(
             "files",
             metavar="file",
