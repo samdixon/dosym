@@ -13,7 +13,7 @@ from setuptools import find_packages, setup, Command
 
 # Package meta-data.
 NAME = "dosym"
-DESCRIPTION = "Simple utility to manage symlinks"
+DESCRIPTION = "easily & quickly create symlinks with a toml file"
 URL = "https://github.com/samdixon/dosym"
 EMAIL = "sdixon@posteo.net"
 AUTHOR = "Samuel Dixon"
