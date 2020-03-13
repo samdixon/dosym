@@ -9,40 +9,40 @@ import dosym.output as output
 __version__ = '0.0.2'
 logger = logging.getLogger(__name__)
 
-def create_parser(optional=None):
+def create_parser(optional=None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
             description=
-            "Dosym. Easily create and remove symbolic links with a toml file.")
+            "dosym - easily & quickly create or remove symlinks with a toml file.")
     parser.add_argument(
             "files",
             metavar="file",
             nargs="*",
-            help="One or more config files")
+            help="one or more config files")
     parser.add_argument(
             "-f",
             "--force",
-            help="Force create symlink and overlink current files",
+            help="force create symlink over any current files",
             action="store_true"
             )
     parser.add_argument(
             "-d", 
             "--debug", 
-            help="Enable Debug", 
+            help="enable debug logging", 
             action="store_true")
     parser.add_argument(
             "--generate-config",
-            help="Generate a blank config file in current directory",
+            help="generate a blank config file in current directory",
             action="store_true"
             )
     parser.add_argument(
             "--version",
-            help="Print Version",
+            help="print dosym version",
             action="store_true"
             )
     args = parser.parse_args(optional)
     return args
 
-def check_debug_mode(args):
+def check_debug_mode(args: argparse.Namespace) -> bool:
     if args.debug:
         debug_file = "debug.log"
         print(f"Writing debug log to ./{debug_file}")
@@ -53,14 +53,14 @@ def check_debug_mode(args):
         logging.basicConfig(level=logging.INFO)
         return False 
 
-def check_generate_config_flag(args):
+def check_generate_config_flag(args: argparse.Namespace) -> None:
     if args.generate_config:
         generate_config_file(args)
 
-def generate_config_file(args):
+def generate_config_file(args: argparse.Namespace) -> None:
     config_generator.generate()
 
-def check_version_flag(args):
+def check_version_flag(args: argparse.Namespace) -> None:
     if args.version:
         print(__version__)
         sys.exit(0)
