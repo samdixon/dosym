@@ -79,18 +79,17 @@ def gather_inputs(args) -> dict:
            input_data = toml_file_parser(args.files[0])
            logger.debug("File Input Data: {}".format(input_data))
        except toml.decoder.TomlDecodeError as e:
-           print("TomlDecodeError from input file")
-           print(f"Error: {e}")
-           print("Exiting...")
+           print("TomlDecodeError from input file", file=sys.stderr)
+           print(e, file=sys.stderr)
            sys.exit()
        except FileNotFoundError as e:
-            print("FileNotFound Error")
-            print(f"Error: {e}")
-            print("Exiting...")
+            print("FileNotFound Error", file=sys.stderr)
+            print(e, file=sys.stderr)
             sys.exit()
     elif sys.stdin.isatty():
-        print("No input file given and no input received")
-        print("Exiting")
+        print(
+                "Usage: dosym <file.toml>\ndosym --help for more information", 
+                file=sys.stderr)
         sys.exit()
     else:
         try:
