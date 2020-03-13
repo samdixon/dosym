@@ -6,7 +6,7 @@ import dosym.config_generator as config_generator
 import dosym.inputs as inputs
 import dosym.output as output
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 logger = logging.getLogger(__name__)
 
 def create_parser(optional=None) -> argparse.Namespace:
