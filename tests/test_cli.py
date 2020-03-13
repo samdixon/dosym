@@ -5,6 +5,8 @@ def test_parser():
     assert p.debug == False
     assert p.force == False
     assert p.files == []
+    assert p.generate_config == False
+    assert p.version == False
 
 def test_debug_mode():
     class DebugEnabled:
