@@ -36,7 +36,8 @@ class Symlink(object):
         if self.is_valid_src:
             self.file_type = self._check_file_type() 
         self.dest_already_symlink = False
-        self.status = "null"
+        self.status = None
+        self.error_message = None
 
     def _get_absolute_path(self, item):
         return os.path.expanduser(item)
@@ -78,7 +79,8 @@ class Symlink(object):
             self.status = self.CREATED
         except FileExistsError as e:
             self.status = self.FAILED
-            logger.error(f"{e}")
+            self.error_message = e
+            logger.debug(f"{e}")
 
     def _force_create(self):
         try:
