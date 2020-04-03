@@ -39,6 +39,9 @@ class Symlink(object):
         self.status = None
         self.error_message = None
 
+    def __repr__(self):
+        return f"Symlink({self.src}, {self.dest})"
+
     def _get_absolute_path(self, item):
         return os.path.expanduser(item)
 
@@ -70,9 +73,6 @@ class Symlink(object):
         else:
             logger.error("Error in _check_file_type function")
 
-    def _make_paths(self):
-        pass
-
     def _simple_create(self):
         try:
             os.symlink(self.absolute_src, self.absolute_dest)
@@ -96,7 +96,6 @@ class Symlink(object):
         except Exception as e:
             self.status = self.FAILED
             logger.error(f"{e}")
-            pass
 
     def create(self, force):
         if force:
