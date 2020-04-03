@@ -6,7 +6,9 @@ import dosym.exceptions as exceptions
 logger = logging.getLogger(__name__)
 
 class InputData(object):
-    """Transforms input data. Joins paths and creates data structures"""
+    """
+    Perform basic formatting and transformations on input data 
+    """
     def __init__(self, input_data):
         self.input_data = input_data
         self.symlinks = None
@@ -29,22 +31,11 @@ class InputData(object):
     def __repr__(self):
         return f"InputData({self.input_data})"
 
-    def __str__(self):
-        return f"""
-        symlinks: {self.symlinks}
-        optional: {self.optional}
-        git_remote: {self.git_remote}
-        source_prefix: {self.source_prefix}
-        localpath_symlinks: {self.localpath_symlinks}"""
-
     def _parse_optional_inputs(self):
         if 'git_remote' in self.optional:
             self.git_remote = self.optional['git_remote']
         if 'source_prefix' in self.optional:
             self.source_prefix = self.optional['source_prefix']
-
-    def determine_path_type(self):
-        pass
 
     def _join_source_prefix_and_key(self):
         self.localpath_symlinks = {}
@@ -58,7 +49,8 @@ class InputData(object):
                 joined_key = join_char.join(join_seq)
                 self.localpath_symlinks[joined_key] = val
 
-def toml_file_parser(inputfiles):
+def toml_file_parser(inputfiles) -> dict:
+    print(type(inputfiles))
     return toml.load(inputfiles)
 
 def toml_stdin_parser():
@@ -96,13 +88,12 @@ def gather_inputs(args) -> dict:
            input_data = toml_stdin_parser()
            logger.debug("Stdin Input Data: {}".format(input_data))
         except toml.decoder.TomlDecodeError as e:
-           print("TomlDecodeError from input file")
-           print(f"Error: {e}")
-           print("Exiting...")
+           print("TomlDecodeError from input file", file=sys.stderr)
+           print(e, file=sys.stderr)
            sys.exit()
         except exceptions.BlankFileError as e:
             print("Blank File")
-            exit()
+            sys.exit()
             
     
     return input_data
