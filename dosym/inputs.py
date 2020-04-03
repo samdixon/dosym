@@ -5,15 +5,17 @@ import dosym.exceptions as exceptions
 
 logger = logging.getLogger(__name__)
 
+
 class InputData(object):
     """
     Perform basic formatting and transformations on input data 
     """
+
     def __init__(self, input_data):
         self.input_data = input_data
         self.symlinks = None
         self.optional = None
-        self.git_remote = None 
+        self.git_remote = None
         self.source_prefix = None
         self.localpath_symlinks = None
 
@@ -22,12 +24,12 @@ class InputData(object):
         if 'optional' in self.input_data:
             self.optional = self.input_data['optional']
             self._parse_optional_inputs()
-        
+
         if self.source_prefix != None:
             self._join_source_prefix_and_key()
         else:
             self.localpath_symlinks = self.symlinks
-    
+
     def __repr__(self):
         return f"InputData({self.input_data})"
 
@@ -39,7 +41,7 @@ class InputData(object):
 
     def _join_source_prefix_and_key(self):
         self.localpath_symlinks = {}
-        for key,val in self.symlinks.items():
+        for key, val in self.symlinks.items():
             if key.startswith("!"):
                 new_key = key.lstrip("!")
                 self.localpath_symlinks[new_key] = val
@@ -49,9 +51,11 @@ class InputData(object):
                 joined_key = join_char.join(join_seq)
                 self.localpath_symlinks[joined_key] = val
 
+
 def toml_file_parser(inputfiles) -> dict:
     print(type(inputfiles))
     return toml.load(inputfiles)
+
 
 def toml_stdin_parser():
     if len(sys.stdin.readlines()) == 0:
@@ -62,40 +66,40 @@ def toml_stdin_parser():
 
     return toml.loads(buf)
 
+
 # Function to gather inputs based on type
 # If file -> toml_file_parser
 # If stdin -> toml_stdin_parser()
 def gather_inputs(args) -> dict:
     if args.files:
-       try:
-           input_data = toml_file_parser(args.files[0])
-           logger.debug("File Input Data: {}".format(input_data))
-       except toml.decoder.TomlDecodeError as e:
-           print("TomlDecodeError from input file", file=sys.stderr)
-           print(e, file=sys.stderr)
-           sys.exit()
-       except FileNotFoundError as e:
+        try:
+            input_data = toml_file_parser(args.files[0])
+            logger.debug("File Input Data: {}".format(input_data))
+        except toml.decoder.TomlDecodeError as e:
+            print("TomlDecodeError from input file", file=sys.stderr)
+            print(e, file=sys.stderr)
+            sys.exit()
+        except FileNotFoundError as e:
             print("FileNotFound Error", file=sys.stderr)
             print(e, file=sys.stderr)
             sys.exit()
     elif sys.stdin.isatty():
         print(
-                "Usage: dosym <file.toml>\ndosym --help for more information", 
-                file=sys.stderr)
+            "Usage: dosym <file.toml>\ndosym --help for more information",
+            file=sys.stderr)
         sys.exit()
     else:
         try:
-           input_data = toml_stdin_parser()
-           logger.debug("Stdin Input Data: {}".format(input_data))
+            input_data = toml_stdin_parser()
+            logger.debug("Stdin Input Data: {}".format(input_data))
         except toml.decoder.TomlDecodeError as e:
-           print("TomlDecodeError from input file", file=sys.stderr)
-           print(e, file=sys.stderr)
-           sys.exit()
+            print("TomlDecodeError from input file", file=sys.stderr)
+            print(e, file=sys.stderr)
+            sys.exit()
         except exceptions.BlankFileError as e:
             print("Blank File")
             sys.exit()
-            
-    
+
     return input_data
 
 
@@ -105,5 +109,3 @@ def process(args) -> InputData:
     logger.debug(f'Proccessed input data: {parsed}')
 
     return parsed
-
-
